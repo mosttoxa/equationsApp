@@ -13,15 +13,16 @@ public class Equation implements Serializable {
 
     private static final long serialVersionUID = Equation.class.getName().hashCode();
 
-
-
     @Id
     @MongoId
     private String id;
 
-    @Indexed(unique = true)
     @Field(targetType = FieldType.STRING, write = Field.Write.NON_NULL)
     private String equation;
+
+    @Indexed(unique = false)
+    @Field(targetType = FieldType.STRING, write = Field.Write.NON_NULL)
+    private String result;
 
     public String getId() {
         return id;
@@ -39,17 +40,25 @@ public class Equation implements Serializable {
         this.equation = equation;
     }
 
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Equation equation1 = (Equation) o;
-        return id.equals(equation1.id) && equation.equals(equation1.equation);
+        return id.equals(equation1.id) && equation.equals(equation1.equation) && result.equals(equation1.result);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, equation);
+        return Objects.hash(id, equation, result);
     }
 
     @Override
@@ -57,6 +66,7 @@ public class Equation implements Serializable {
         return "Equation{" +
                 "id='" + id + '\'' +
                 ", equation='" + equation + '\'' +
+                ", result='" + result + '\'' +
                 '}';
     }
 }

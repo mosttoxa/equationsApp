@@ -3,6 +3,7 @@ package org.example;
 import java.util.Date;
 import java.util.Scanner;
 
+import org.mariuszgromada.math.mxparser.License;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,6 @@ public class Main implements CommandLineRunner {
         SpringApplicationBuilder builder = new SpringApplicationBuilder(Main.class);
         builder.headless(false);
         ConfigurableApplicationContext context = builder.run(args);
-
-       // SpringApplication.run(Main.class, args);
+        License.iConfirmNonCommercialUse("mosttoxa");
     }
 }

@@ -23,7 +23,11 @@ public class TestPersistance {
 
     @Test
     public void tesCreateAndGet() throws Exception {
-        repository.insert(new Equation());
+        Equation e = new Equation();
+        e.setEquation("ghghgh");
+        e.setResult("445");
+        repository.insert(e);
         assertTrue(repository.count()==1);
+        repository.deleteAll();
     }
 }
