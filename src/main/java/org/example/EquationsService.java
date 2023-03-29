@@ -4,7 +4,6 @@ import org.mariuszgromada.math.mxparser.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.logging.Logger;
 
 @Service
@@ -13,11 +12,11 @@ public class EquationsService {
     @Autowired
     EquationsRepository repo;
 
-    public void service(String input) {
-        Equation e = new Equation();
-        e.setEquation(input);
+    public void solve(String input) {
         String result = solveEquation(input);
         if (!result.equals("NaN")) {
+            Equation e = new Equation();
+            e.setEquation(input);
             e.setResult(result);
             repo.insert(e);
         } else {
@@ -25,16 +24,40 @@ public class EquationsService {
         }
     }
 
-    // Method to solve the given equation
-    public static String solveEquation(String equation) {
-        //bring the equation to the form f(x) = 0 to use mXparser calculate method
-        String[] sides = equation.split("=");
-        String eq = sides[0] + "-" + sides[1];
-        Expression e = new Expression("solve(" + eq + ", x," + Integer.MIN_VALUE + "," + Integer.MAX_VALUE + ")");
-        e.setVerboseMode();
-        double x = e.calculate();
+    public void check(String input, String root) {
+        try {
+            double rootToCheck = Double.valueOf(root);
+            String result = solveEquation(input);
+            if (!result.equals("NaN")) {
+                if (rootToCheck == Double.valueOf(result)) {
+                    Equation e = new Equation();
+                    e.setEquation(input);
+                    e.setResult(result);
+                    repo.insert(e);
+                } else {
+                    LOG.warning("Equation's root is not correct");
+                }
+            } else {
+                LOG.warning("Equation syntax is not valid");
+            }
 
-        return String.valueOf(x);
+        } catch (NumberFormatException e) {
+            LOG.warning("Equation's root is not a number");
+        }
     }
 
+    // Method to solve the given equation
+    private String solveEquation(String equation) {
+        //bring the equation to the form f(x) = 0 to use mXparser calculate method
+        if (!equation.contains("=")) {
+            LOG.warning("Invalid equation. Correct equation must contain =");
+            return "NaN";
+        }
+        String[] sides = equation.split("=");
+        String eq = sides[0] + "-(" + sides[1] + ")";
+        License.iConfirmNonCommercialUse("mosttoxa");
+        Expression e = new Expression("solve(" + eq + ", x," + Integer.MIN_VALUE + "," + Integer.MAX_VALUE + ")");
+        e.setVerboseMode();
+        return String.valueOf(e.calculate());
+    }
 }

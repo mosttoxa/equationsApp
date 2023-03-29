@@ -2,6 +2,8 @@ package org.example;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface EquationsRepository extends MongoRepository<Equation, String> {
+import java.util.List;
 
+public interface EquationsRepository extends MongoRepository<Equation, String> {
+    public List<Equation> findByResult(String result);
 }
