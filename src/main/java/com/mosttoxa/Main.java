@@ -1,9 +1,8 @@
-package org.example;
+package com.mosttoxa;
 
 import java.util.Date;
 import java.util.Scanner;
 
-import org.mariuszgromada.math.mxparser.License;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,17 +31,23 @@ public class Main implements CommandLineRunner {
         try (Scanner scan = new Scanner(System.in)) {
             while (scan.hasNext()) {
                 String input = scan.nextLine();
+                // break app
                 if (input.equals("exit")) {
                     break;
+                // solve equation and add it to db (input form: solve 2x=4)
                 } else if (input.startsWith("solve")) {
-                    input = input.substring("solve".length());
-                    LOG.info(input);
-                    es.solve(input);
+                    String equation = input.substring("solve".length());
+                    es.solve(equation);
+                // check if supposed number is correct root of equation (input form: check 2x=4 2)
                 } else if (input.startsWith("check")) {
                     input = input.substring("check".length());
-                    LOG.info(input);
-                    String root = input.substring(input.lastIndexOf(" "));
-                    es.check(input.substring(0, input.lastIndexOf(" ")), root);
+                    String equation = (input.contains(" ")) ? input.substring(0, input.lastIndexOf(" ")) : "";
+                    String root = (input.contains(" ")) ? input.substring(input.lastIndexOf(" ")) : "";
+                    es.check(equation, root);
+                // find all equations from db with given root (input form: find 2)
+                } else if (input.startsWith("find")) {
+                    String root = input.substring("find".length());
+                    es.findByRoot(root);
                 } else {
                     LOG.info("Wrong input. Please enter correct command");
                 }

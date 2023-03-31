@@ -1,4 +1,4 @@
-package org.example;
+package com.mosttoxa;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -17,6 +17,7 @@ public class Equation implements Serializable {
     @MongoId
     private String id;
 
+    @Indexed(unique = true)
     @Field(targetType = FieldType.STRING, write = Field.Write.NON_NULL)
     private String equation;
 
